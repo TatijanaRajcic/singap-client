@@ -43,13 +43,13 @@ export default class Home extends Component {
   }
 
   handlePlace = (searchedPlace) => {
+    let searchedPlaceCoordinates = [
+      Number(searchedPlace.LONGITUDE),
+      Number(searchedPlace.LATITUDE),
+    ];
     let placeInDb = this.state.allPlaces.find((onePlace) => {
-      return this.arraysEqual(
-        onePlace.location.coordinates,
-        searchedPlace.geometry.coordinates
-      );
+      return this.arraysEqual(onePlace.coordinates, searchedPlaceCoordinates);
     });
-    console.log(searchedPlace);
     if (placeInDb) {
       this.setState({ searchedPlace, searchDone: true, showDetails: true });
     } else {
@@ -96,7 +96,10 @@ export default class Home extends Component {
           >
             {this.state.searchedPlace && (
               <Feature
-                coordinates={this.state.searchedPlace.geometry.coordinates}
+                coordinates={[
+                  Number(this.state.searchedPlace.LONGITUDE),
+                  Number(this.state.searchedPlace.LATITUDE),
+                ]}
               />
             )}
           </Layer>

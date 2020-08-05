@@ -6,7 +6,10 @@ import apiHandler from "../../api/apiHandler";
 
 class HouseForm extends Component {
   state = {
-    address: "",
+    fullAddress: "",
+    blocNumber: "",
+    textAddress: "",
+    building: "",
     category: "",
     coordinates: [],
     alreadyExist: false,
@@ -34,16 +37,19 @@ class HouseForm extends Component {
       });
   };
 
-  handlePlace = (address) => {
+  handlePlace = (place) => {
     apiHandler
-      .checkHouse(address.place_name)
+      .checkHouse(place.ADDRESS)
       .then((res) => {
         if (res.length > 0) {
           this.setState({ alreadyExist: true, houseId: res[0]._id });
         } else {
           this.setState({
-            address: address.place_name,
-            coordinates: address.geometry.coordinates,
+            fullAddress: place.ADDRESS,
+            blocNumber: place.BLK_NO,
+            textAddress: place.ROAD_NAME,
+            building: place.BUILDING,
+            coordinates: [Number(place.LONGITUDE), Number(place.LATITUDE)],
           });
         }
       })

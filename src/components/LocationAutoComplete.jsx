@@ -11,12 +11,6 @@ class LocationAutoComplete extends Component {
       isLoading: false,
     };
     this.handleSearchChange = this.handleSearchChange.bind(this);
-
-    if (!process.env.REACT_APP_MAPBOX_TOKEN) {
-      throw new Error(
-        "You don't have any 'process.env.REACT_APP_MAPBOX_API_KEY'"
-      );
-    }
   }
 
   handleSearchChange(e) {
@@ -45,12 +39,12 @@ class LocationAutoComplete extends Component {
 
     axios
       .get(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${this.props.searchType}${this.state.search}.json?proximity=${this.props.mapCenter[0]},${this.props.mapCenter[1]}&access_token=${process.env.REACT_APP_MAPBOX_TOKEN}&country=SG`
+        `https://developers.onemap.sg/commonapi/search?searchVal=${this.state.search}&returnGeom=Y&getAddrDetails=Y&pageNum=1`
       )
       .then((response) => {
         console.log(response);
         this.setState({
-          results: response.data.features,
+          results: response.data.results,
           isLoading: false,
         });
       });
@@ -58,7 +52,7 @@ class LocationAutoComplete extends Component {
 
   handleItemClicked(place) {
     this.setState({
-      search: place.place_name,
+      search: place.ADDRESS,
       results: [],
     });
 
@@ -78,11 +72,11 @@ class LocationAutoComplete extends Component {
         <ul className="LocationAutoComplete-results">
           {this.state.results.map((place) => (
             <li
-              key={place.id}
+              key={place.X}
               className="LocationAutoComplete-items"
               onClick={() => this.handleItemClicked(place)}
             >
-              {place.place_name}
+              {place.ADDRESS}
             </li>
           ))}
           {this.state.isLoading && (
