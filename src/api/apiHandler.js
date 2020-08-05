@@ -44,9 +44,23 @@ export default {
       .catch(errorHandler);
   },
 
-  getItems() {
+  getHouses() {
     return service
-      .get("/api/items")
+      .get("/api/houses")
+      .then((res) => res.data)
+      .catch(errorHandler);
+  },
+
+  checkHouse(search) {
+    return service
+      .get("/api/houses/" + search)
+      .then((res) => res.data)
+      .catch(errorHandler);
+  },
+
+  createOneHouse(house) {
+    return service
+      .post("/api/houses", house)
       .then((res) => res.data)
       .catch(errorHandler);
   },

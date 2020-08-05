@@ -6,7 +6,7 @@ import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Profile";
-import FormItem from "./components/Forms/FormItem";
+import FormHouse from "./components/Forms/FormHouse";
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
         <Route exact path="/" component={Home} />
         <Route exact path="/signin" component={Signin} />
         <Route exact path="/signup" component={Signup} />
-        <Route exact path="/item/create" component={FormItem} />
+        <Route exact path="/house/create" component={FormHouse} />
         <ProtectedRoute exact path="/profile" component={Profile} />
       </Switch>
     </div>

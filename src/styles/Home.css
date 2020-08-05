@@ -1,0 +1,13 @@
+.Home {
+  display: flex;
+}
+
+.Home .map-result {
+  width: 30vw;
+  margin: 0 20px;
+}
+
+.Home .LocationAutoComplete input {
+  width: 100%;
+  box-sizing: border-box;
+}

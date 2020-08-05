@@ -45,9 +45,10 @@ class LocationAutoComplete extends Component {
 
     axios
       .get(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${this.state.search}.json?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${this.props.searchType}${this.state.search}.json?proximity=${this.props.mapCenter[0]},${this.props.mapCenter[1]}&access_token=${process.env.REACT_APP_MAPBOX_TOKEN}&country=SG`
       )
       .then((response) => {
+        console.log(response);
         this.setState({
           results: response.data.features,
           isLoading: false,
@@ -72,7 +73,7 @@ class LocationAutoComplete extends Component {
           type="text"
           value={this.state.search}
           onChange={this.handleSearchChange}
-          placeholder="Enter an address"
+          placeholder="Enter an address in Singapore"
         />
         <ul className="LocationAutoComplete-results">
           {this.state.results.map((place) => (
