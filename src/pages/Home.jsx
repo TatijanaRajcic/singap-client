@@ -72,22 +72,6 @@ export default class Home extends Component {
           }}
           center={this.mapCenter}
         >
-          {/* <Layer
-            type="symbol"
-            id="marker"
-            images={["my-marker", myMarker]}
-            layout={{ "icon-image": "my-marker" }} // custom marker
-          >
-            {this.state.allPlaces.map((onePlace, index) => {
-              return (
-                <Feature
-                  key={index}
-                  coordinates={onePlace.location.coordinates}
-                />
-              );
-            })}
-          </Layer> */}
-
           <Layer
             type="symbol"
             id="marker"

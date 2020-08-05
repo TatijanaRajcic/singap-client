@@ -122,3 +122,16 @@
 .form-section-bottom {
   text-align: center;
 }
+
+.form #unit-numbers {
+  display: flex;
+  align-items: center;
+}
+
+.form #unit-numbers input {
+  width: 60px;
+}
+
+.form #unit-numbers input::-webkit-input-placeholder {
+  text-align: center;
+}

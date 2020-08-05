@@ -53,7 +53,11 @@ export default {
 
   checkHouse(search) {
     return service
-      .get("/api/houses/" + search)
+      .get("/api/houses", {
+        params: {
+          search
+        },
+      })
       .then((res) => res.data)
       .catch(errorHandler);
   },
