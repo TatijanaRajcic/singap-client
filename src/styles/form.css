@@ -33,6 +33,10 @@
   font-weight: 500;
 }
 
+.form-group {
+  margin-bottom: 20px;
+}
+
 .form-group .custom-upload {
   border: 1px solid #5663ff;
   color: #5663ff;
@@ -109,7 +113,7 @@
 }
 
 .form button {
-  margin-top: 30px;
+  margin-top: 10px;
   background: #5663ff;
   width: 100%;
   color: white;
@@ -123,15 +127,22 @@
   text-align: center;
 }
 
-.form #unit-numbers {
-  display: flex;
-  align-items: center;
+.form .for-accessibility {
+  display: none;
 }
 
-.form #unit-numbers input {
-  width: 60px;
+.form input[type="radio"] {
+  margin: 0 5px;
 }
 
-.form #unit-numbers input::-webkit-input-placeholder {
+.form .unit-numbers {
+  margin-left: 5px;
+}
+
+.form .unit-numbers input {
+  width: 50px;
+}
+
+.form .unit-numbers input::-webkit-input-placeholder {
   text-align: center;
 }

@@ -13,7 +13,7 @@ const Map = ReactMapboxGl({
 
 export default class Home extends Component {
   state = {
-    searchedPlace: null,
+    searchedAddress: null,
     allPlaces: [],
     searchDone: false,
     showDetails: false,
@@ -42,19 +42,19 @@ export default class Home extends Component {
     return true;
   }
 
-  handlePlace = (searchedPlace) => {
-    let searchedPlaceCoordinates = [
-      Number(searchedPlace.LONGITUDE),
-      Number(searchedPlace.LATITUDE),
+  handlePlace = (searchedAddress) => {
+    let searchedAddressCoordinates = [
+      Number(searchedAddress.LONGITUDE),
+      Number(searchedAddress.LATITUDE),
     ];
-    let placeInDb = this.state.allPlaces.find((onePlace) => {
-      return this.arraysEqual(onePlace.coordinates, searchedPlaceCoordinates);
+    let placeInDb = this.state.allPlaces.filter((onePlace) => {
+      return this.arraysEqual(onePlace.coordinates, searchedAddressCoordinates);
     });
     if (placeInDb) {
-      this.setState({ searchedPlace, searchDone: true, showDetails: true });
+      this.setState({ searchedAddress, searchDone: true, showDetails: true });
     } else {
       this.setState({
-        searchedPlace: "",
+        searchedAddress: "",
         searchDone: true,
         showDetails: false,
       });
@@ -62,6 +62,12 @@ export default class Home extends Component {
   };
 
   render() {
+    let housesAtSearchedAddress =
+      this.state.searchedAddress &&
+      this.state.allPlaces.filter((onePlace) => {
+        return onePlace.fullAddress === this.state.searchedAddress.ADDRESS;
+      });
+
     return (
       <div className="Home">
         <Map
@@ -78,11 +84,11 @@ export default class Home extends Component {
             images={["my-marker", myMarker]}
             layout={{ "icon-image": "my-marker" }} // custom marker
           >
-            {this.state.searchedPlace && (
+            {this.state.searchedAddress && (
               <Feature
                 coordinates={[
-                  Number(this.state.searchedPlace.LONGITUDE),
-                  Number(this.state.searchedPlace.LATITUDE),
+                  Number(this.state.searchedAddress.LONGITUDE),
+                  Number(this.state.searchedAddress.LATITUDE),
                 ]}
               />
             )}
@@ -96,7 +102,14 @@ export default class Home extends Component {
           />
           <div>
             {this.state.searchDone && this.state.showDetails && (
-              <h1>This home is registered on our website.</h1>
+              <React.Fragment>
+                <h1>This home is registered on our website.</h1>
+                <h2>Here are all the houses registered at this address:</h2>
+                {housesAtSearchedAddress &&
+                  housesAtSearchedAddress.map((onePlace, index) => (
+                    <p key={index}>{onePlace.unitNumbers}</p>
+                  ))}
+              </React.Fragment>
             )}
             {this.state.searchDone && !this.state.showDetails && (
               <h1>This home is not registered on our website.</h1>

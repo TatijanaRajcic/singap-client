@@ -6,6 +6,7 @@ import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Profile";
+import OneHouse from "./pages/OneHouse";
 import FormHouse from "./components/Forms/FormHouse";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route exact path="/signin" component={Signin} />
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/house/create" component={FormHouse} />
+        <Route exact path="/house/:houseId" component={OneHouse} />
         <ProtectedRoute exact path="/profile" component={Profile} />
       </Switch>
     </div>
