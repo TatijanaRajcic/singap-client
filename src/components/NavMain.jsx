@@ -28,7 +28,7 @@ const NavMain = (props) => {
         {authContext.isLoggedIn && (
           <React.Fragment>
             <li>
-              <NavLink to="/house/create">
+              <NavLink to="/houses/create">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"

@@ -47,10 +47,10 @@ export default class Home extends Component {
       Number(searchedAddress.LONGITUDE),
       Number(searchedAddress.LATITUDE),
     ];
-    let placeInDb = this.state.allPlaces.filter((onePlace) => {
+    let placesInDb = this.state.allPlaces.filter((onePlace) => {
       return this.arraysEqual(onePlace.coordinates, searchedAddressCoordinates);
     });
-    if (placeInDb) {
+    if (placesInDb.length > 0) {
       this.setState({ searchedAddress, searchDone: true, showDetails: true });
     } else {
       this.setState({
@@ -103,7 +103,7 @@ export default class Home extends Component {
           <div>
             {this.state.searchDone && this.state.showDetails && (
               <React.Fragment>
-                <h1>This home is registered on our website.</h1>
+                <h1>This address is registered on our website.</h1>
                 <h2>Here are all the houses registered at this address:</h2>
                 {housesAtSearchedAddress &&
                   housesAtSearchedAddress.map((onePlace, index) => (
@@ -112,7 +112,7 @@ export default class Home extends Component {
               </React.Fragment>
             )}
             {this.state.searchDone && !this.state.showDetails && (
-              <h1>This home is not registered on our website.</h1>
+              <h1>This address is not registered on our website.</h1>
             )}
           </div>
         </div>
