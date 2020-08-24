@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@turf/turf": "^5.1.6",
     "axios": "^0.19.2",
     "mapbox-gl": "^1.11.1",
     "react": "^16.13.1",

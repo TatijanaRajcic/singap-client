@@ -42,7 +42,6 @@ class LocationAutoComplete extends Component {
         `https://developers.onemap.sg/commonapi/search?searchVal=${this.state.search}&returnGeom=Y&getAddrDetails=Y&pageNum=1`
       )
       .then((response) => {
-        console.log(response);
         this.setState({
           results: response.data.results,
           isLoading: false,
