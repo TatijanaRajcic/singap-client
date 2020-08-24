@@ -35,13 +35,14 @@ const paintLayer = {
   "fill-extrusion-opacity": 0.6,
 };
 
+let flying = false;
+
 export default class Home extends Component {
   state = {
     searchedAddress: null,
     allPlaces: [],
     searchDone: false,
     showDetails: false,
-    allBuildingsOnMap: null,
     map: null,
   };
 
@@ -142,17 +143,11 @@ export default class Home extends Component {
     }
   };
 
-  getBuildings = (map) => {
-    if (!map.loaded()) {
-      return;
-    }
+  getBuildings = (map, callback) => {
     const all_features = map.queryRenderedFeatures({
       layers: ["3d-buildings"],
     });
-    if (!this.state.allBuildingsOnMap && all_features.length > 0) {
-      this.setState({ allBuildingsOnMap: all_features });
-    }
-    map.off("render", this.getBuildings); // remove this handler now that we're done
+    if (callback) callback(all_features);
   };
 
   highlightBuilding = (searchedAddress, map) => {
@@ -160,6 +155,7 @@ export default class Home extends Component {
       Number(searchedAddress.LONGITUDE),
       Number(searchedAddress.LATITUDE),
     ];
+
     map.flyTo({
       center: point,
       zoom: 19,
@@ -169,10 +165,15 @@ export default class Home extends Component {
         return t;
       },
     });
-    this.state.allBuildingsOnMap.forEach((polygone) => {
-      if (booleanPointInPolygon(point, polygone.geometry)) {
-        this.selectFeatures(polygone, map);
-      }
+
+    map.once("moveend", () => {
+      this.getBuildings(map, (allFeatures) => {
+        allFeatures.forEach((polygone) => {
+          if (booleanPointInPolygon(point, polygone.geometry)) {
+            this.selectFeatures(polygone, map);
+          }
+        });
+      });
     });
   };
 
@@ -202,7 +203,6 @@ export default class Home extends Component {
           zoom={[15]}
           pitch={[60]}
           bearing={[-60]}
-          onRender={this.getBuildings}
           onStyleLoad={this.initiateMap}
         >
           <MapContext.Consumer>
