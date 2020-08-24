@@ -62,11 +62,62 @@ export default class Home extends Component {
     if (a === b) return true;
     if (a == null || b == null) return false;
     if (a.length !== b.length) return false;
-    for (var i = 0; i < a.length; ++i) {
+    for (let i = 0; i < a.length; ++i) {
       if (a[i] !== b[i]) return false;
     }
     return true;
   }
+
+  initiateMap = (map) => {
+    let layers = map.getStyle().layers;
+    let labelLayerId;
+    for (let i = 0; i < layers.length; i++) {
+      if (layers[i].type === "symbol" && layers[i].layout["text-field"]) {
+        labelLayerId = layers[i].id;
+        break;
+      }
+    }
+
+    map.addSource("currentBuildings", {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: [],
+      },
+    });
+
+    map.addLayer(
+      {
+        id: "highlight",
+        source: "currentBuildings",
+        type: "fill-extrusion",
+        minzoom: 15,
+        paint: {
+          "fill-extrusion-color": "#f0f",
+          "fill-extrusion-height": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            15,
+            0,
+            15.05,
+            ["get", "height"],
+          ],
+          "fill-extrusion-base": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            15,
+            0,
+            15.05,
+            ["get", "min_height"],
+          ],
+          "fill-extrusion-opacity": 0.6,
+        },
+      },
+      labelLayerId
+    );
+  };
 
   handlePlace = (searchedAddress) => {
     let searchedAddressCoordinates = [
@@ -78,9 +129,6 @@ export default class Home extends Component {
     let placesInDb = this.state.allPlaces.filter((onePlace) => {
       return this.arraysEqual(onePlace.coordinates, searchedAddressCoordinates);
     });
-
-    // center the map on the given address + display building in another color if present in DB
-    this.showDetails(searchedAddressCoordinates);
 
     // show different text according to presence in DB
     if (placesInDb.length > 0) {
@@ -94,42 +142,45 @@ export default class Home extends Component {
     }
   };
 
-  showDetails = (searchedAddressCoordinates) => {
-    let point = [searchedAddressCoordinates[0], searchedAddressCoordinates[1]];
-
-    this.state.allBuildingsOnMap.forEach((polygone, i) => {
-      if (booleanPointInPolygon(point, polygone.geometry)) {
-        console.log("this is the feature of the searched place", polygone.id);
-        this.selectFeatures(polygone.id);
-      }
-    });
-  };
-
-  selectFeatures = (id) => {
-    // map.setFeatureState(
-    //   { source: "composite", sourceLayer: "building", id },
-    //   { highlight: "true" }
-    // );
-    // map.setLight({
-    //   color: "hsl(0, 100%, 50%)",
-    // });
-  };
-
   getBuildings = (map) => {
     if (!map.loaded()) {
       return;
     }
-
     const all_features = map.queryRenderedFeatures({
       layers: ["3d-buildings"],
-      // ,filter: ["==", "id", clicked.properties.parent]
     });
-
     if (!this.state.allBuildingsOnMap && all_features.length > 0) {
       this.setState({ allBuildingsOnMap: all_features });
     }
+    map.off("render", this.getBuildings); // remove this handler now that we're done
+  };
 
-    map.off("render", this.getBuildings); // remove this handler now that we're done.
+  highlightBuilding = (searchedAddress, map) => {
+    let point = [
+      Number(searchedAddress.LONGITUDE),
+      Number(searchedAddress.LATITUDE),
+    ];
+    map.flyTo({
+      center: point,
+      zoom: 19,
+      speed: 0.7,
+      curve: 1,
+      easing(t) {
+        return t;
+      },
+    });
+    this.state.allBuildingsOnMap.forEach((polygone) => {
+      if (booleanPointInPolygon(point, polygone.geometry)) {
+        this.selectFeatures(polygone, map);
+      }
+    });
+  };
+
+  selectFeatures = (polygone, map) => {
+    map.getSource("currentBuildings").setData({
+      type: "FeatureCollection",
+      features: [polygone],
+    });
   };
 
   render() {
@@ -152,23 +203,33 @@ export default class Home extends Component {
           pitch={[60]}
           bearing={[-60]}
           onRender={this.getBuildings}
+          onStyleLoad={this.initiateMap}
         >
-          <Layer
-            id="3d-buildings"
-            sourceId="composite"
-            sourceLayer="building"
-            filter={["==", "extrude", "true"]}
-            type="fill-extrusion"
-            minZoom={14}
-            paint={paintLayer}
-          />
+          <MapContext.Consumer>
+            {(map) => {
+              return (
+                <React.Fragment>
+                  <Layer
+                    id="3d-buildings"
+                    sourceId="composite"
+                    sourceLayer="building"
+                    filter={["==", "extrude", "true"]}
+                    type="fill-extrusion"
+                    minZoom={14}
+                    paint={paintLayer}
+                  />
+                  <Autocomplete
+                    searchType=""
+                    onSelect={this.handlePlace}
+                    onHighlight={(place) => this.highlightBuilding(place, map)}
+                    mapCenter={this.mapCenter}
+                  />
+                </React.Fragment>
+              );
+            }}
+          </MapContext.Consumer>
         </Map>
         <div className="map-result">
-          <Autocomplete
-            searchType=""
-            onSelect={this.handlePlace}
-            mapCenter={this.mapCenter}
-          />
           <div>
             {this.state.searchDone && this.state.showDetails && (
               <React.Fragment>
@@ -189,12 +250,3 @@ export default class Home extends Component {
     );
   }
 }
-
-// {this.state.searchedAddress && (
-//   <Feature
-//     coordinates={[
-//       Number(this.state.searchedAddress.LONGITUDE),
-//       Number(this.state.searchedAddress.LATITUDE),
-//     ]}
-//   />
-// )}

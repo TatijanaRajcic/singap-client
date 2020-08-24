@@ -56,6 +56,7 @@ class LocationAutoComplete extends Component {
     });
 
     this.props.onSelect(place);
+    this.props.onHighlight && this.props.onHighlight(place);
   }
 
   render() {
