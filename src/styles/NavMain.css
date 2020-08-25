@@ -3,7 +3,8 @@
   background-color: transparent;
   left: 0;
   right: 0;
-  color: rgb(57, 57, 57);
+  color: white;
+  background:black;
   display: flex;
   align-items: center;
   padding: 20px;
@@ -13,7 +14,6 @@
 .NavMain .logo {
   font-size: 2.2rem;
   font-weight: 600;
-  margin: 1.2rem;
   text-shadow: 2px 2px 2px grey;
   z-index: 1;
 }

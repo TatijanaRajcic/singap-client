@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import apiHandler from "../api/apiHandler";
+import { withRouter } from "react-router-dom";
+import { withUser } from "../components/Auth/withUser";
 import "../styles/form.css";
 import "../styles/OneHouse.css";
 
@@ -18,7 +20,8 @@ const ratings = [
   },
 ];
 
-export default class OneHouse extends Component {
+class OneHouse extends Component {
+
   state = {
     house: null,
     houseId: null,
@@ -68,7 +71,8 @@ export default class OneHouse extends Component {
   };
 
   displayForm = () => {
-    this.setState({ displayForm: true, displayReviews: false });
+    const { authContext } = this.props;
+    authContext.user ? this.setState({ displayForm: true, displayReviews: false }) : this.props.history.push("/signin")
   };
 
   displayReviews = () => {
@@ -200,7 +204,7 @@ export default class OneHouse extends Component {
                     There are no existing reviews for this house
                   </h2>
                 )}
-                <button onClick={this.displayForm}>Add my own</button>
+                <button onClick={this.displayForm}>Add my own review</button>
               </div>
             )}
 
@@ -287,7 +291,9 @@ export default class OneHouse extends Component {
                   </p>
                   <textarea name="description" id="description"></textarea>
                 </div>
-                <button className="btn-submit">Next</button>
+                <button className="btn-submit">
+                  Send Review (subject to verification)
+                </button>
               </form>
             )}
           </React.Fragment>
@@ -296,3 +302,5 @@ export default class OneHouse extends Component {
     );
   }
 }
+
+export default withRouter(withUser(OneHouse));

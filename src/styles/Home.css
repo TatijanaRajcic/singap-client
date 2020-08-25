@@ -1,13 +1,51 @@
-.Home {
-  display: flex;
+.Home .title-container {
+  background: black;
+  transform: skew(-20deg);
+  width: max-content;
+  margin: 0 auto;
+  color:white;
+}
+
+.Home h1 {
+  text-align: center;
+  width: max-content;
+  margin: 60px auto;
+  font-size: 4rem;
+  padding: 20px;
+}
+
+.Home h2 {
+  font-size: 1.3rem;
+  color: white;
 }
 
 .Home .map-result {
   width: 30vw;
   margin: 0 20px;
+  background: #7f7f7e;
+  /* color:white; */
+}
+
+.Home .LocationAutoComplete {
+  position: fixed;
+  right: 20px;
+  width: calc(30vw - 10px);
 }
 
 .Home .LocationAutoComplete input {
   width: 100%;
   box-sizing: border-box;
+  border: none;
+  padding: 16px;
+  font-size: 1.2rem;
+  box-shadow: 0 0.125rem 0.75rem rgba(0, 0, 0, 0.08);
+}
+
+.Home .map-result {
+  padding: 16px;
+  margin-top: 50px;
+}
+
+.Home .map-result a {
+  text-decoration: underline;
 }

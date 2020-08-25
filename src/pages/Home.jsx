@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ReactMapboxGl, { MapContext, Layer, Feature } from "react-mapbox-gl";
+import { Link } from "react-router-dom";
 import Autocomplete from "../components/LocationAutoComplete";
 import "../styles/Home.css";
 import apiHandler from "../api/apiHandler";
@@ -93,7 +94,7 @@ export default class Home extends Component {
         type: "fill-extrusion",
         minzoom: 14,
         paint: {
-          "fill-extrusion-color": "#8181FD",
+          "fill-extrusion-color": "white",
           "fill-extrusion-height": [
             "interpolate",
             ["linear"],
@@ -160,11 +161,9 @@ export default class Home extends Component {
       lat: parseFloat(searchedAddress.LATITUDE),
     };
 
-    this.setState({ mapCenter: [center.lon, center.lat], zoom: 19.5 });
+    this.setState({ mapCenter: [center.lon, center.lat], zoom: 18.5 });
 
     map.on("moveend", (e) => {
-      console.log("event", e);
-
       this.getBuildings(map, (allFeatures) => {
         allFeatures.forEach((polygone) => {
           if (booleanPointInPolygon(point, polygone.geometry)) {
@@ -191,55 +190,70 @@ export default class Home extends Component {
 
     return (
       <div className="Home">
-        <Map
-          style="mapbox://styles/examples/cj68bstx01a3r2rndlud0pwpv"
-          containerStyle={{
-            height: "100vh",
-            width: "70vw",
-          }}
-          center={this.state.mapCenter}
-          zoom={[this.state.zoom]}
-          pitch={[60]}
-          bearing={[-60]}
-          onStyleLoad={this.initiateMap}
-        >
-          <MapContext.Consumer>
-            {(map) => {
-              return (
-                <React.Fragment>
-                  <Layer
-                    id="3d-buildings"
-                    sourceId="composite"
-                    sourceLayer="building"
-                    filter={["==", "extrude", "true"]}
-                    type="fill-extrusion"
-                    minZoom={14}
-                    paint={paintLayer}
-                  />
-                  <Autocomplete
-                    searchType=""
-                    onSelect={this.handlePlace}
-                    onHighlight={(place) => this.highlightBuilding(place, map)}
-                  />
-                </React.Fragment>
-              );
+        <div className="title-container">
+          <h1>Welcome to RS.com</h1>
+        </div>
+        <div className="flex">
+          <Map
+            style="mapbox://styles/examples/cj68bstx01a3r2rndlud0pwpv"
+            containerStyle={{
+              height: "60vh",
+              width: "70vw",
+              marginLeft: "20px"
             }}
-          </MapContext.Consumer>
-        </Map>
-        <div className="map-result">
-          <div>
+            center={this.state.mapCenter}
+            zoom={[this.state.zoom]}
+            pitch={[60]}
+            bearing={[-60]}
+            onStyleLoad={this.initiateMap}
+          >
+            <MapContext.Consumer>
+              {(map) => {
+                return (
+                  <React.Fragment>
+                    <Autocomplete
+                      searchType=""
+                      onSelect={this.handlePlace}
+                      onHighlight={(place) =>
+                        this.highlightBuilding(place, map)
+                      }
+                    />
+                    <Layer
+                      id="3d-buildings"
+                      sourceId="composite"
+                      sourceLayer="building"
+                      filter={["==", "extrude", "true"]}
+                      type="fill-extrusion"
+                      minZoom={14}
+                      paint={paintLayer}
+                    />
+                  </React.Fragment>
+                );
+              }}
+            </MapContext.Consumer>
+          </Map>
+          <div className="map-result">
+            {!this.state.searchDone && <h2>No search has been made yet.</h2>}
             {this.state.searchDone && this.state.showDetails && (
               <React.Fragment>
-                <h1>This address is registered on our website.</h1>
-                <h2>Here are all the houses registered at this address:</h2>
+                <h2>This address is registered on our website.</h2>
+                <h3>Here are all the houses registered at this address:</h3>
                 {housesAtSearchedAddress &&
                   housesAtSearchedAddress.map((onePlace, index) => (
-                    <p key={index}>{onePlace.unitNumbers}</p>
+                    <p key={index}>
+                      <Link className="link" to={`/houses/${onePlace._id}`}>
+                        House {index + 1}{" "}
+                      </Link>
+                      :{" "}
+                      {onePlace.unitNumbers
+                        ? onePlace.unitNumbers
+                        : "Unit Numbers Not Applicable"}
+                    </p>
                   ))}
               </React.Fragment>
             )}
             {this.state.searchDone && !this.state.showDetails && (
-              <h1>This address is not registered on our website.</h1>
+              <h2>This address is not registered on our website.</h2>
             )}
           </div>
         </div>
