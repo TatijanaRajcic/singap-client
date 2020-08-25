@@ -42,9 +42,9 @@ export default class Home extends Component {
     searchDone: false,
     showDetails: false,
     map: null,
+    mapCenter: [103.851959, 1.29027],
+    zoom: 15,
   };
-
-  mapCenter = [103.851959, 1.29027];
 
   componentDidMount() {
     apiHandler
@@ -91,14 +91,14 @@ export default class Home extends Component {
         id: "highlight",
         source: "currentBuildings",
         type: "fill-extrusion",
-        minzoom: 15,
+        minzoom: 14,
         paint: {
-          "fill-extrusion-color": "#f0f",
+          "fill-extrusion-color": "#8181FD",
           "fill-extrusion-height": [
             "interpolate",
             ["linear"],
             ["zoom"],
-            15,
+            14,
             0,
             15.05,
             ["get", "height"],
@@ -107,12 +107,12 @@ export default class Home extends Component {
             "interpolate",
             ["linear"],
             ["zoom"],
-            15,
+            14,
             0,
             15.05,
             ["get", "min_height"],
           ],
-          "fill-extrusion-opacity": 0.6,
+          "fill-extrusion-opacity": 1,
         },
       },
       labelLayerId
@@ -160,12 +160,7 @@ export default class Home extends Component {
       lat: parseFloat(searchedAddress.LATITUDE),
     };
 
-    map.flyTo({
-      center: center,
-      zoom: 19,
-      bearing: 0,
-      essential: true,
-    });
+    this.setState({ mapCenter: [center.lon, center.lat], zoom: 19.5 });
 
     map.on("moveend", (e) => {
       console.log("event", e);
@@ -202,8 +197,8 @@ export default class Home extends Component {
             height: "100vh",
             width: "70vw",
           }}
-          center={this.mapCenter}
-          zoom={[15]}
+          center={this.state.mapCenter}
+          zoom={[this.state.zoom]}
           pitch={[60]}
           bearing={[-60]}
           onStyleLoad={this.initiateMap}
@@ -225,7 +220,6 @@ export default class Home extends Component {
                     searchType=""
                     onSelect={this.handlePlace}
                     onHighlight={(place) => this.highlightBuilding(place, map)}
-                    mapCenter={this.mapCenter}
                   />
                 </React.Fragment>
               );
