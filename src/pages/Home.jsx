@@ -35,8 +35,6 @@ const paintLayer = {
   "fill-extrusion-opacity": 0.6,
 };
 
-let flying = false;
-
 export default class Home extends Component {
   state = {
     searchedAddress: null,
@@ -70,6 +68,7 @@ export default class Home extends Component {
   }
 
   initiateMap = (map) => {
+    // method to initiate the new layer for highlighted buildings
     let layers = map.getStyle().layers;
     let labelLayerId;
     for (let i = 0; i < layers.length; i++) {
@@ -156,17 +155,21 @@ export default class Home extends Component {
       Number(searchedAddress.LATITUDE),
     ];
 
+    let center = {
+      lon: parseFloat(searchedAddress.LONGITUDE),
+      lat: parseFloat(searchedAddress.LATITUDE),
+    };
+
     map.flyTo({
-      center: point,
+      center: center,
       zoom: 19,
-      speed: 0.7,
-      curve: 1,
-      easing(t) {
-        return t;
-      },
+      bearing: 0,
+      essential: true,
     });
 
-    map.once("moveend", () => {
+    map.on("moveend", (e) => {
+      console.log("event", e);
+
       this.getBuildings(map, (allFeatures) => {
         allFeatures.forEach((polygone) => {
           if (booleanPointInPolygon(point, polygone.geometry)) {
