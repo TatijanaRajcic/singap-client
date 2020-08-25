@@ -1,0 +1,86 @@
+.OneHouse {
+  margin: 100px auto;
+  width: 40vw;
+}
+
+.OneHouse .form {
+  margin: 50px 0;
+}
+
+.OneHouse .buttons button:first-child {
+  margin-right: 5px;
+}
+
+.OneHouse .buttons button:last-child {
+  margin-left: 5px;
+}
+
+.OneHouse .rating-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.OneHouse .rating-container img {
+  width: 100px;
+}
+
+.OneHouse [type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.OneHouse [type="radio"] + img {
+  cursor: pointer;
+}
+
+.OneHouse [type="radio"]:checked ~ img {
+  border: 5px solid #5663ff;
+  border-radius: 100px;
+}
+
+.OneHouse .ratingSelector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.OneHouse input[type="file"] {
+  display: none;
+}
+
+.OneHouse .custom-file-upload {
+  background: #eff1fb;
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.OneHouse .spaced-t {
+  margin-top: 30px;
+}
+
+.OneHouse .spaced-b {
+  margin-bottom: 20px;
+}
+
+.OneHouse textarea {
+  width: 100%;
+}
+
+.OneHouse ul {
+  list-style-type: square;
+  padding-left: 20px;
+}
+
+.review {
+  margin: 20px 0;
+  background: #eff1fb;
+  border-radius: 10px;
+  padding: 16px;
+}

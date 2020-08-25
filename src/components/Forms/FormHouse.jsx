@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import LocationAutoComplete from "../LocationAutoComplete";
-import { Link } from "react-router-dom";
 import "../../styles/form.css";
+import "../../styles/FormHouse.css";
 import apiHandler from "../../api/apiHandler";
 
 class HouseForm extends Component {
@@ -41,8 +41,9 @@ class HouseForm extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     let completeState = { ...this.state };
-    completeState.unitNumbers = `#${this.state.unitNumbers1}-${this.state.unitNumbers2}`;
-    console.log("COMPLETE STATE", completeState);
+    completeState.unitNumbers = null;
+    if (this.state.unitNumbers1 != "" && this.state.unitNumbers2 != "")
+      completeState.unitNumbers = `#${this.state.unitNumbers1}-${this.state.unitNumbers2}`;
 
     // handling errors
     let errors = [];
@@ -101,7 +102,7 @@ class HouseForm extends Component {
 
   render() {
     return (
-      <div className="ItemForm-container">
+      <div className="FormHouse">
         <form
           className="form"
           onChange={this.handleChange}

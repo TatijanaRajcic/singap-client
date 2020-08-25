@@ -131,7 +131,8 @@
   display: none;
 }
 
-.form input[type="radio"] {
+.form input[type="radio"],
+.form input[type="checkbox"] {
   margin: 0 5px;
 }
 

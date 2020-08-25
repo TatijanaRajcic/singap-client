@@ -51,6 +51,13 @@ export default {
       .catch(errorHandler);
   },
 
+  getOneHouse(id) {
+    return service
+      .get(`/api/houses/${id}`)
+      .then((res) => res.data)
+      .catch(errorHandler);
+  },
+
   checkHouse(search) {
     return service
       .get("/api/houses", {
@@ -65,6 +72,13 @@ export default {
   createOneHouse(house) {
     return service
       .post("/api/houses", house)
+      .then((res) => res.data)
+      .catch(errorHandler);
+  },
+
+  createOneLease(lease) {
+    return service
+      .post("/api/leases", lease)
       .then((res) => res.data)
       .catch(errorHandler);
   },
